@@ -27,6 +27,7 @@ while True:
             todos = file.readlines()
 
         #new_todos= [item.strip('\n') for item in todos]
+        ##
 
         for index,items in enumerate(todos):
             items = items.strip("\n")
