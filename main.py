@@ -1,3 +1,9 @@
+def get_todos():
+    with open('files/todos.txt', 'r') as file:
+        todos= file.readlines()
+    return todos
+
+
 user_prompt="enter a to-do"
 
 todos = []
@@ -9,8 +15,7 @@ while True:
     if "add" in user_action:
         todo = user_action[4:]
 
-        with open('files/todos.txt', 'r') as file:
-            todos = file.readlines()
+        todos= get_todos()
 
         todos.append(todo + '\n')
 
@@ -23,8 +28,7 @@ while True:
         # todos = file.readlines()
         # file.close()
 
-        with open('files/todos.txt', 'r') as file:
-            todos = file.readlines()
+        todos= get_todos()
 
         #new_todos= [item.strip('\n') for item in todos]
         ##
@@ -34,36 +38,39 @@ while True:
             row= f"{index +1}-{items}"
             print(row)
 
-    elif 'edit' in user_action:
-        number = int(input("number of todo to edit :"))
-        number= number-1
+    elif user_action.startswith("edit"):
+        try:
+            number = int(user_action[5:])
+            number= number-1
 
-        with open('files/todos.txt', 'r') as file:
-            todos = file.readlines()
-        #print("Here is how it will be",todos)
+            todos = get_todos()
+            #print("Here is how it will be",todos)
 
 
-        new_todo = input("enter a new to-do")
-        todos[number]=new_todo
+            new_todo = input("enter a new to-do")
+            todos[number]=new_todo
 
-        with open('files/todos.txt', 'w') as file:
-            file.writelines(todos)
+            with open('files/todos.txt', 'w') as file:
+                file.writelines(todos)
+        except ValueError:
+            print("Your command is not valid")
+            continue
 
 
         print("Got it!")
-    elif 'complete' in user_action:
-        number = int(input("Number of todo to complete: "))
+    elif user_action.startswith("complete"):
+        number = int(user_action[9:])
 
-        with open("todos.txt","r") as file:
-            todos = file.readlines()
+        todos= get_todos()
         index=number-1
-        todo_to_remove = todos[index]
+        todo_to_remove = todos[index].strip('\n')
         todos.pop(index)
 
         with open("todos.txt", "w") as file:
             file.writelines(todos)
 
         message = f"Todo {todo_to_remove} was removed from the list"
+
     elif 'exit' in user_action:
         break
     else:
